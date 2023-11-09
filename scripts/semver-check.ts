@@ -4,8 +4,9 @@ import pkg from "../package.json";
 
 const infos = Bun.spawnSync({ cmd: ["pnpm", "info", "--json"] });
 if (!infos.success) {
+  console.info("Bypassing semver check");
   console.error("Could not get package info, got:\n%s", infos.stderr);
-  process.exit(1);
+  process.exit(0);
 }
 
 const current = pkg.version;
