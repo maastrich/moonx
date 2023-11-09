@@ -2,6 +2,14 @@
   "name": "@maastrich/moonx",
   "version": "0.1.0",
   "description": "A CLI tool to help you with moon syntax",
+  "keywords": [
+    "moon",
+    "moonrepo",
+    "cli",
+    "proto"
+  ],
+  "license": "ISC",
+  "author": "Maastrich @maastrich",
   "type": "module",
   "main": "src/index.ts",
   "bin": {
@@ -12,25 +20,10 @@
     "bin"
   ],
   "scripts": {
-    "prettier": "prettier --write .",
     "build": "bun build --compile . --outfile=\"bin/moonx\"",
-    "semver-check": "bun run scripts/semver-check.ts"
-  },
-  "keywords": [
-    "moon",
-    "moonrepo",
-    "cli",
-    "proto"
-  ],
-  "author": "Maastrich @maastrich",
-  "license": "ISC",
-  "devDependencies": {
-    "@trivago/prettier-plugin-sort-imports": "^4.2.1",
-    "@types/nunjucks": "^3.2.6",
-    "@types/semver": "^7.5.5",
-    "bun-types": "^1.0.11",
-    "prettier": "^3.0.3",
-    "semver": "^7.5.4"
+    "prettier": "prettier --write .",
+    "semver-check": "bun run scripts/semver-check.ts",
+    "sort": "bun x sort-package-json"
   },
   "dependencies": {
     "@moonrepo/types": "^1.8.0",
@@ -40,5 +33,14 @@
     "node-emoji": "^2.1.0",
     "nunjucks": "^3.2.4",
     "yaml": "^2.3.4"
+  },
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.2.1",
+    "@types/nunjucks": "^3.2.6",
+    "@types/semver": "^7.5.5",
+    "bun-types": "^1.0.11",
+    "prettier": "^3.0.3",
+    "semver": "^7.5.4",
+    "sort-package-json": "^2.6.0"
   }
 }

@@ -18,4 +18,5 @@ jobs:
       - run: bun install
       - run: bun run prettier
       - run: bun run build
+      - run: bun run sort --check
       - run: bun run semver-check
