@@ -18,5 +18,4 @@ jobs:
       - run: bun install
       - run: bun run prettier
       - run: bun run build
-      - run: pnpm info --json > .pnpm.info.json
       - run: bun run semver-check
