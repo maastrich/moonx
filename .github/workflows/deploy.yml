@@ -1,0 +1,23 @@
+name: deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: build and deploy
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - run: bun install
+      - run: bun run prettier
+      - run: bun run build
+      - run: pnpm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
