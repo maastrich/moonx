@@ -22,10 +22,21 @@ for (const [name, workspaces] of commands) {
     .command(`${name} [...workspaces]`, "", { allowUnknownOptions: true })
     .usage(`${name} [...workspaces] [options]`)
     .action(async (wss: Array<string>, options) => {
-      console.log(options);
-      spawnSync("moon run");
+      const args = ["moon", "run"];
+      const rest = ["--", ...options["--"]];
       if (wss.length === 0) {
-        return console.log(`running ${name} on ${workspaces.join(", ")}`);
+        return Bun.spawnSync({
+          cmd: [args, `:${name}`, rest].flat(),
+          stdout: "inherit",
+          stderr: "inherit",
+          stdin: "inherit",
+          onExit(_, exitCode) {
+            if (exitCode) {
+              logger.error(`task ${name} failed`);
+              process.exit(exitCode);
+            }
+          },
+        });
       }
       wss = wss.filter((ws) => {
         if (!workspaces.includes(ws)) {
@@ -37,7 +48,18 @@ for (const [name, workspaces] of commands) {
       if (wss.length === 0) {
         return;
       }
-      console.log(`running ${name} on ${wss.join(", ")}`);
+      return Bun.spawnSync({
+        cmd: [args, wss.map((ws) => `${name}:${ws}`), rest].flat(),
+        stdout: "inherit",
+        stderr: "inherit",
+        stdin: "inherit",
+        onExit(_, exitCode) {
+          if (exitCode) {
+            logger.error(`task ${name} failed`);
+            process.exit(exitCode);
+          }
+        },
+      });
     });
 }
 
@@ -58,4 +80,13 @@ cli.help((sections) => {
   return [{ body: help.task(workspaces) }];
 });
 
-cli.parse();
+try {
+  cli.parse(Bun.argv, { run: false });
+  await cli.runMatchedCommand();
+} catch (error) {
+  if (error instanceof Error) {
+    logger.error(error.message);
+  }
+  logger.error(String(error));
+  process.exit(1);
+}
