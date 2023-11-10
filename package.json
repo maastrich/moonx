@@ -8,7 +8,7 @@
     "cli",
     "proto"
   ],
-  "license": "ISC",
+  "license": "MIT",
   "author": "Maastrich @maastrich",
   "type": "module",
   "main": "src/index.ts",
