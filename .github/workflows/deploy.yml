@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -15,10 +18,22 @@ jobs:
       - uses: pnpm/action-setup@v2
         with:
           version: 8
-      - run: bun install
-      - run: bun run prettier
-      - run: bun run build
-      - run: echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
+      - name: install dependencies
+        run: bun install
+      - name: check prettier
+        run: bun run prettier
+      - name: build moonx executable
+        run: bun run build
+      - name: add prepatch version
+        run: pnpm version prepatch --preid="pr-$GITHUB_RUN_ID" --no-git-tag-version
+        if: github.event_name == 'pull_request'
+      - name: authenticate with npm
+        run: echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: pnpm publish --access public --no-git-checks
+      - name: publish prerelease
+        run: pnpm publish --access public --no-git-checks --tag="pr-${{ github.event.number }}"
+        if: github.event_name == 'pull_request'
+      - name: publish
+        run: pnpm publish --access public --no-git-checks
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
