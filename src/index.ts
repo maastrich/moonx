@@ -27,6 +27,7 @@ for (const [name, workspaces] of commands) {
       if (wss.length === 0) {
         return Bun.spawnSync({
           cmd: [...args, `:${name}`, ...rest],
+          stdio: ["inherit", "inherit", "inherit"],
         });
       }
       wss = wss.filter((ws) => {
@@ -41,6 +42,7 @@ for (const [name, workspaces] of commands) {
       }
       return Bun.spawnSync({
         cmd: [...args, ...wss.map((ws) => `${name}:${ws}`), ...rest],
+        stdio: ["inherit", "inherit", "inherit"],
       });
     });
 }
