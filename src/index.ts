@@ -26,7 +26,7 @@ for (const [name, workspaces] of commands) {
       const rest = ["--", ...options["--"]];
       if (wss.length === 0) {
         return Bun.spawnSync({
-          cmd: [args, `:${name}`, "--", rest].flat(),
+          cmd: [args, `:${name}`, rest].flat(),
           stdout: "inherit",
           stderr: "inherit",
           stdin: "inherit",
