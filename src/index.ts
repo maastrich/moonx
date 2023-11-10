@@ -23,13 +23,19 @@ for (const [name, workspaces] of commands) {
     .usage(`${name} [...workspaces] [options]`)
     .action(async (wss: Array<string>, options) => {
       const args = ["moon", "run"];
-      const rest = options["--"] ?? [];
+      const rest = ["--", ...options["--"]];
       if (wss.length === 0) {
         return Bun.spawnSync({
-          cmd: [...args, `:${name}`, ...rest],
+          cmd: [args, `:${name}`, "--", rest].flat(),
           stdout: "inherit",
           stderr: "inherit",
           stdin: "inherit",
+          onExit(_, exitCode) {
+            if (exitCode) {
+              logger.error(`task ${name} failed`);
+              process.exit(exitCode);
+            }
+          },
         });
       }
       wss = wss.filter((ws) => {
@@ -43,10 +49,16 @@ for (const [name, workspaces] of commands) {
         return;
       }
       return Bun.spawnSync({
-        cmd: [...args, ...wss.map((ws) => `${name}:${ws}`), ...rest],
+        cmd: [args, wss.map((ws) => `${name}:${ws}`), rest].flat(),
         stdout: "inherit",
         stderr: "inherit",
         stdin: "inherit",
+        onExit(_, exitCode) {
+          if (exitCode) {
+            logger.error(`task ${name} failed`);
+            process.exit(exitCode);
+          }
+        },
       });
     });
 }
