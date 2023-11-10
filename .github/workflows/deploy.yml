@@ -22,8 +22,6 @@ jobs:
         run: bun install
       - name: check prettier
         run: bun run prettier
-      - name: build moonx executable
-        run: bun run build
       - name: add prepatch version
         run: pnpm version prepatch --preid="pr-$GITHUB_RUN_ID" --no-git-tag-version
         if: github.event_name == 'pull_request'
