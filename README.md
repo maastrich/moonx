@@ -15,7 +15,7 @@ proto install moon
 Then install MoonX with:
 
 ```sh
-pnpm install moonx
+pnpm install @maastrich/moonx -g # global install is optional but recommended
 ```
 
 ## Usage
