@@ -17,6 +17,25 @@ const commands = await scan();
 
 const cli = cac("moonx");
 
+cli
+  .command("_moonx_list [...items]", "List all available tasks")
+  .action(([command, ...wss]) => {
+    const workspaces = commands.get(command);
+
+    if (!command) {
+      return console.log(Array.from(commands.keys()).join("\n"));
+    }
+    if (!workspaces) {
+      return;
+    }
+    if (wss.length > 0) {
+      return console.log(
+        workspaces.filter((ws) => !wss.includes(ws)).join("\n"),
+      );
+    }
+    console.log(workspaces.join("\n"));
+  });
+
 for (const [name, workspaces] of commands) {
   cli
     .command(`${name} [...workspaces]`, "", { allowUnknownOptions: true })
