@@ -25,6 +25,7 @@ cli
     const result = list(arg, commands);
     const stdout = Bun.stdout.writer();
     stdout.write(result.join("\n"));
+    stdout.end();
   });
 
 for (const name in commands) {
