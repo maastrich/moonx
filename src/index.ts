@@ -32,7 +32,6 @@ for (const name of commands.keys()) {
   cli
     .command(`${name} [...workspaces]`, "", { allowUnknownOptions: true })
     .action(async (wss: Array<string>, options) => {
-      console.log(wss);
       const workspaces = exec(name, wss, commands);
       const rest = ["--", ...options["--"]];
       return Bun.spawnSync({
