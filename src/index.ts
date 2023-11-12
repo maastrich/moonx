@@ -1,6 +1,8 @@
 import { cac } from "cac";
 import { spawnSync } from "child_process";
 
+import { exec } from "./cli/exec.js";
+import { list } from "./cli/list.js";
 import { help } from "./utils/help.js";
 import { logger } from "./utils/logger.js";
 import { scan } from "./utils/scan-moon.js";
@@ -18,57 +20,23 @@ const commands = await scan();
 const cli = cac("moonx");
 
 cli
-  .command("_moonx_list [...items]", "List all available tasks")
-  .action(([command, ...wss]) => {
-    const workspaces = commands.get(command);
-
-    if (!command) {
-      return console.log(Array.from(commands.keys()).join("\n"));
-    }
-    if (!workspaces) {
-      return;
-    }
-    if (wss.length > 0) {
-      return console.log(
-        workspaces.filter((ws) => !wss.includes(ws)).join("\n"),
-      );
-    }
-    console.log(workspaces.join("\n"));
+  .command("_moonx_list [...params]", "List all available tasks")
+  .action((arg) => {
+    const result = list(arg, commands);
+    const stdout = Bun.stdout.writer();
+    stdout.write(result.join("\n"));
   });
 
-for (const [name, workspaces] of commands) {
+for (const name in commands) {
   cli
     .command(`${name} [...workspaces]`, "", { allowUnknownOptions: true })
-    .usage(`${name} [...workspaces] [options]`)
+    .usage(`${name} [...workspaces] [MOONX_OPTIONS] -- [OPTIONS]`)
     .action(async (wss: Array<string>, options) => {
-      const args = ["moon", "run"];
+      console.log(wss);
+      const workspaces = exec(name, wss, commands);
       const rest = ["--", ...options["--"]];
-      if (wss.length === 0) {
-        return Bun.spawnSync({
-          cmd: [args, `:${name}`, rest].flat(),
-          stdout: "inherit",
-          stderr: "inherit",
-          stdin: "inherit",
-          onExit(_, exitCode) {
-            if (exitCode) {
-              logger.error(`task ${name} failed`);
-              process.exit(exitCode);
-            }
-          },
-        });
-      }
-      wss = wss.filter((ws) => {
-        if (!workspaces.includes(ws)) {
-          logger.warn(`task ${name} does not exist on workspace ${ws}`);
-          return false;
-        }
-        return true;
-      });
-      if (wss.length === 0) {
-        return;
-      }
       return Bun.spawnSync({
-        cmd: [args, wss.map((ws) => `${name}:${ws}`), rest].flat(),
+        cmd: ["moon", "run", workspaces, rest].flat(),
         stdout: "inherit",
         stderr: "inherit",
         stdin: "inherit",
