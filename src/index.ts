@@ -31,7 +31,6 @@ cli
 for (const name in commands) {
   cli
     .command(`${name} [...workspaces]`, "", { allowUnknownOptions: true })
-    .usage(`${name} [...workspaces] [MOONX_OPTIONS] -- [OPTIONS]`)
     .action(async (wss: Array<string>, options) => {
       console.log(wss);
       const workspaces = exec(name, wss, commands);
