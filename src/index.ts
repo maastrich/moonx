@@ -28,7 +28,7 @@ cli
     stdout.end();
   });
 
-for (const name in commands.keys()) {
+for (const name of commands.keys()) {
   cli
     .command(`${name} [...workspaces]`, "", { allowUnknownOptions: true })
     .action(async (wss: Array<string>, options) => {
