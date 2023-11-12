@@ -67,6 +67,12 @@ cli.help((sections) => {
   return [{ body: help.task(workspaces) }];
 });
 
+cli.on("command:*", () => {
+  logger.error(`Invalid command: ${cli.args.join(" ")}`);
+  cli.outputHelp();
+  process.exit(1);
+});
+
 try {
   cli.parse(Bun.argv, { run: false });
   await cli.runMatchedCommand();
