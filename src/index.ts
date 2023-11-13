@@ -1,6 +1,8 @@
 import { cac } from "cac";
 import { spawnSync } from "child_process";
 
+import pkg from "../package.json";
+
 import { exec } from "./cli/exec.js";
 import { list } from "./cli/list.js";
 import { help } from "./utils/help.js";
@@ -18,6 +20,15 @@ if (!isMoonInstalledGlobally) {
 const commands = await scan();
 
 const cli = cac("moonx");
+
+cli.option("cache", "");
+cli.option("color", "");
+cli.option("concurrency", "");
+cli.option("c", "");
+cli.option("log", "");
+cli.option("logFile", "");
+cli.option("moon-help", "");
+cli.option("moon-version", "");
 
 cli
   .command("_moonx_list [...params]", "List all available tasks")
@@ -71,6 +82,8 @@ cli.on("command:*", () => {
   cli.outputHelp();
   process.exit(1);
 });
+
+cli.version(pkg.version);
 
 try {
   cli.parse(Bun.argv, { run: false });
