@@ -13,5 +13,5 @@ export function list(
   if (!wss.length) {
     return workspaces;
   }
-  return wss.filter((ws) => workspaces.includes(ws));
+  return workspaces.filter((ws) => !wss.includes(ws));
 }
