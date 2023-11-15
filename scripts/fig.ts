@@ -1,6 +1,5 @@
 const generator: Fig.Generator = {
   script(args) {
-    console.log(args);
     return [
       "moonx",
       "_moonx_list",
@@ -11,7 +10,6 @@ const generator: Fig.Generator = {
   },
   trigger: "moonx",
   postProcess(out) {
-    console.log("here");
     const lines = out.split("\n");
     return lines.map((line) => {
       return {
