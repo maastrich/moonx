@@ -4,7 +4,7 @@
     "target": "ESNext",
     "module": "NodeNext",
     "skipLibCheck": true,
-    "types": ["bun-types"],
+    "types": ["bun-types", "@withfig/autocomplete-types"],
     "resolveJsonModule": true,
     "moduleResolution": "NodeNext"
   },

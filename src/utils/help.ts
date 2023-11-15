@@ -35,7 +35,9 @@ ${chalk.bold("Moon option:")}
     --log <LOG>                     Lowest log level to output [env: MOON_LOG=] [default: info] [possible values: off, error, warn, info, debug, trace]
     --logFile <LOG_FILE>            Path to a file to dump the moon logs [env: MOON_LOG_FILE=]
     -h, --help                      Print help
-    -V, --version                   Print version
+    -v, --version                   Print moonx version
+    --moon-version                  Print moon version
+    --moon-help                     Print moon help
 
 For more info, run any command with the --help flag
     e.g. ${chalk.yellow("moonx <command> --help")}
