@@ -32,7 +32,9 @@ cli
 
 for (const [name, workspaces] of commands) {
   cli
-    .command(`${name} [...workspaces]`, "", { allowUnknownOptions: true })
+    .command(`${name} [...workspaces]`, workspaces.join(), {
+      allowUnknownOptions: true,
+    })
     .action(async (wss: Array<string>, options) => {
       const rest = ["--", ...options["--"]];
       if (wss.length === 0) {
