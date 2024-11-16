@@ -48,7 +48,7 @@ function moonx(tasks: Array<[string, string[]]>) {
     tasks: tasks.map(([task, commands]) => ({
       name: task,
       spacing: " ".repeat(30 - task.length),
-      commands: commands.join(),
+      commands: commands.join(" "),
     })),
   });
 }
