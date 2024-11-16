@@ -1,21 +1,12 @@
 import { cac } from "cac";
-import { spawnSync } from "child_process";
 
 import pkg from "../package.json";
 
-import { exec } from "./cli/exec.js";
 import { list } from "./cli/list.js";
 import { help } from "./utils/help.js";
 import { logger } from "./utils/logger.js";
 import { scan } from "./utils/scan-moon.js";
-
-const isMoonInstalledGlobally = spawnSync("which", ["moon"]).status === 0;
-
-if (!isMoonInstalledGlobally) {
-  logger.error(
-    "Moon is not installed globally. Please install it with: proto install moon",
-  );
-}
+import { moon } from "./utils/utils.js";
 
 const commands = await scan();
 
@@ -39,14 +30,39 @@ cli
     stdout.end();
   });
 
-for (const name of commands.keys()) {
+for (const [name, workspaces] of commands) {
   cli
-    .command(`${name} [...workspaces]`, "", { allowUnknownOptions: true })
+    .command(`${name} [...workspaces]`, workspaces.join(), {
+      allowUnknownOptions: true,
+    })
     .action(async (wss: Array<string>, options) => {
-      const workspaces = exec(name, wss, commands);
       const rest = ["--", ...options["--"]];
-      return Bun.spawnSync({
-        cmd: ["moon", "run", workspaces, rest].flat(),
+      if (wss.length === 0) {
+        return moon([`:${name}`, rest].flat(), {
+          stdout: "inherit",
+          stderr: "inherit",
+          stdin: "inherit",
+          onExit(_, exitCode) {
+            if (exitCode) {
+              logger.error(`task ${name} failed`);
+              process.exit(exitCode);
+            }
+          },
+        });
+      }
+      const filterd = wss.filter((ws) => {
+        if (!workspaces.includes(ws)) {
+          logger.warn(`task ${name} does not exist on workspace ${ws}`);
+          return false;
+        }
+        return true;
+      });
+      if (filterd.length === 0) {
+        logger.error(`no valid workspaces for task ${name}`);
+        return;
+      }
+
+      return moon([filterd.map((ws) => `${name}:${ws}`), rest].flat(), {
         stdout: "inherit",
         stderr: "inherit",
         stdin: "inherit",
@@ -62,7 +78,7 @@ for (const name of commands.keys()) {
 
 cli.help((sections) => {
   if (sections.some((section) => section.title === "Commands")) {
-    return [{ body: help.moonx(Array.from(commands.keys())) }];
+    return [{ body: help.moonx(Array.from(commands.entries())) }];
   }
   const usage = sections.find((section) => section.title === "Usage");
   if (!usage) {
