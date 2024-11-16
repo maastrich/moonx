@@ -25,7 +25,7 @@ ${chalk.bold(
 
 ${chalk.bold("Commands:")}
   {% for task in tasks -%}
-    ${chalk.blue("{{ task }}")}
+    ${chalk.blue("{{ task.name }}")}{{ task.spacing }}{{ task.commands }}
   {% endfor %}
 
 ${chalk.bold("Moon option:")}
@@ -43,8 +43,14 @@ For more info, run any command with the --help flag
     e.g. ${chalk.yellow("moonx <command> --help")}
 `);
 
-function moonx(tasks: Array<string>) {
-  return renderString(_moonx, { tasks });
+function moonx(tasks: Array<[string, string[]]>) {
+  return renderString(_moonx, {
+    tasks: tasks.map(([task, commands]) => ({
+      task,
+      spacing: " ".repeat(30 - task.length),
+      commands: commands.join(),
+    })),
+  });
 }
 
 const _task = style(`

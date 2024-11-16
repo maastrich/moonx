@@ -78,7 +78,7 @@ for (const [name, workspaces] of commands) {
 
 cli.help((sections) => {
   if (sections.some((section) => section.title === "Commands")) {
-    return [{ body: help.moonx(Array.from(commands.keys())) }];
+    return [{ body: help.moonx(Array.from(commands.entries())) }];
   }
   const usage = sections.find((section) => section.title === "Usage");
   if (!usage) {
