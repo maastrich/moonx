@@ -46,7 +46,7 @@ For more info, run any command with the --help flag
 function moonx(tasks: Array<[string, string[]]>) {
   return renderString(_moonx, {
     tasks: tasks.map(([task, commands]) => ({
-      task,
+      name: task,
       spacing: " ".repeat(30 - task.length),
       commands: commands.join(),
     })),
