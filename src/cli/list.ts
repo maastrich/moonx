@@ -9,7 +9,7 @@ export function list(
   if (!commands.has(command)) {
     return Array.from(commands.keys());
   }
-  const workspaces = commands.get(command)!;
+  const workspaces = commands.get(command) ?? [];
   if (!wss.length) {
     return workspaces;
   }
