@@ -28,13 +28,13 @@ function getBaseCommand() {
   const pm = getPackageManager();
   switch (pm) {
     case "pnpm":
-      return ["pnpx", "moon"];
+      return ["pnpm", "exec", "moon"];
     case "yarn":
-      return ["yarn", "moon"];
+      return ["yarn", "exec", "moon"];
     case "bun":
-      return ["bun", "moon"];
+      return ["bun", "exec", "moon"];
     case "npm":
-      return ["npx", "moon"];
+      return ["npm", "exec", "moon"];
     default: {
       if (isMoonInstalledGlobally()) {
         return ["moon"];
