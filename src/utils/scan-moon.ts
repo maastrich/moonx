@@ -1,5 +1,6 @@
 import type { Task } from "@moonrepo/types";
 
+import { load } from "./load-yaml.js";
 import { moon } from "./utils.js";
 
 type QueryResult = {
@@ -8,6 +9,15 @@ type QueryResult = {
 };
 
 export async function scan() {
+  const moonxfig = await load<{
+    "ignore-tasks": string[];
+  }>("moonx.yml", {
+    allowMissing: true,
+    placeholder: {
+      "ignore-tasks": [],
+    },
+  });
+
   const res = moon(["query", "tasks", "--json"], {
     stdout: "pipe",
     stderr: "inherit",
@@ -24,6 +34,9 @@ export async function scan() {
 
   for (const [name, tasks] of projects) {
     for (const task of tasks) {
+      if (moonxfig["ignore-tasks"].includes(task)) {
+        continue;
+      }
       const command = commands.get(task) ?? [];
       command.push(name);
       commands.set(task, command);
