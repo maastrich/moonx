@@ -1,5 +1,0 @@
-#! /usr/bin/env bash
-
-echo "This is a placeholder for the moonx binary."
-echo "Please run "bun run build" to build the moonx binary."
-exit 1
