@@ -1,29 +1,55 @@
 name: deploy
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["check"]
+    types:
+      - completed
 
 jobs:
   build:
     runs-on: ubuntu-latest
     name: build and deploy
+    strategy:
+      matrix:
+        platform: [darwin, linux]
+        arch: [x64, arm64]
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
       - uses: pnpm/action-setup@v2
         with:
           version: 8
-      - name: install dependencies
-        run: bun install
-      - name: check prettier
-        run: bun run prettier
-      - name: add prepatch version
-        run: pnpm version prepatch --preid="pr-$GITHUB_RUN_ID" --no-git-tag-version
+      - uses: actions/cache/restore@v4
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/bun.lockb') }}
+      - run: bun build --target="bun-${{ matrix.platform }}-${{ matrix.arch }}" --outfile="bin/${{ matrix.platform }}-${{ matrix.arch }}" --compile
+      # upload the build artifact
+      - uses: actions/upload-artifact@v4
+        with:
+          path: bin/${{ matrix.platform }}-${{ matrix.arch }}
+          name: ${{ matrix.platform }}-${{ matrix.arch }}
+  deploy:
+    runs-on: ubuntu-latest
+    name: deploy
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - uses: actions/cache/restore@v4
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/bun.lockb') }}
+      - uses: actions/download-artifact@v4
+        with:
+          path: bin
+      - run: pnpm version prepatch --preid="pr-$GITHUB_RUN_ID" --no-git-tag-version
         if: github.event_name == 'pull_request'
       - name: authenticate with npm
         run: echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc

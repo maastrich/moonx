@@ -1,10 +1,12 @@
-name: check
+name: setup
 
 on:
-  workflow_run:
-    workflows: ["setup"]
-    types:
-      - completed
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   lint:
@@ -13,12 +15,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
-      - uses: actions/cache/restore@v4
+      - run: bun install
+      - uses: actions/cache@v4
         with:
           path: |
             **/node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('**/**/bun.lockb') }}
-      - run: bun run prettier
-      - run: bun run build
-      - run: bun run sort --check
-      - run: bun run semver-check
