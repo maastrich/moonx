@@ -1,9 +1,14 @@
-import { existsSync, renameSync } from "node:fs";
+import { chmodSync, existsSync, renameSync } from "node:fs";
 import { join } from "node:path";
 
 const { platform, arch } = process;
 
-const src = join(process.cwd(), "bin", `${platform}-${arch}`);
+const src = join(
+  process.cwd(),
+  "bin",
+  `${platform}-${arch}`,
+  `${platform}-${arch}`,
+);
 const dest = join(process.cwd(), "bin", "moonx");
 
 if (!existsSync(src)) {
@@ -12,3 +17,4 @@ if (!existsSync(src)) {
 }
 
 renameSync(src, dest);
+chmodSync(dest, 0o755);
