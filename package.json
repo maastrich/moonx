@@ -21,8 +21,8 @@
     "scripts/setup-binary.js"
   ],
   "scripts": {
-    "postinstall": "node scripts/setup-binary.js",
     "build": "bun build --compile . --outfile=\"bin/moonx\"",
+    "postinstall": "node scripts/setup-binary.js",
     "prettier": "prettier --write .",
     "semver-check": "bun run scripts/semver-check.ts",
     "sort": "bun x sort-package-json"
