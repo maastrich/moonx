@@ -1,10 +1,12 @@
 name: deploy
 
 on:
-  workflow_run:
-    workflows: ["check"]
-    types:
-      - completed
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -20,11 +22,7 @@ jobs:
       - uses: pnpm/action-setup@v2
         with:
           version: 8
-      - uses: actions/cache/restore@v4
-        with:
-          path: |
-            **/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/bun.lockb') }}
+      - run: bun install
       - run: bun build --target="bun-${{ matrix.platform }}-${{ matrix.arch }}" --outfile="bin/${{ matrix.platform }}-${{ matrix.arch }}" --compile
       # upload the build artifact
       - uses: actions/upload-artifact@v4
