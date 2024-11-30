@@ -21,7 +21,7 @@
   ],
   "scripts": {
     "build": "bun build --compile . --outfile=\"bin/moonx\"",
-    "postinstall": "bun run build",
+    "prepare": "bun run build",
     "prettier": "prettier --write .",
     "semver-check": "bun run scripts/semver-check.ts",
     "sort": "bun x sort-package-json"
