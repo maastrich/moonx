@@ -27,7 +27,7 @@ jobs:
       # upload the build artifact
       - uses: actions/upload-artifact@v4
         with:
-          path: bin/${{ matrix.platform }}-${{ matrix.arch }}
+          path: bin
           name: ${{ matrix.platform }}-${{ matrix.arch }}
   deploy:
     runs-on: ubuntu-latest
