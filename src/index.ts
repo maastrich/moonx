@@ -62,7 +62,7 @@ for (const [name, workspaces] of commands) {
         return;
       }
 
-      return moon([filterd.map((ws) => `${name}:${ws}`), rest].flat(), {
+      return moon([filterd.map((ws) => `${ws}:${name}`), rest].flat(), {
         stdout: "inherit",
         stderr: "inherit",
         stdin: "inherit",
