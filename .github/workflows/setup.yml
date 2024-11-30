@@ -11,7 +11,7 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    name: check code style and build
+    name: install dependencies and cache results
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
