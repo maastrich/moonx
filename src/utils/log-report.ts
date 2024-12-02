@@ -21,15 +21,14 @@ export async function logReport({ enabled }: { enabled: boolean }) {
 
   for (const task of tasks) {
     const parts = [
-      task.target,
-      task.status,
+      task.target + " ".repeat(30 - task.target.length),
+      task.status + " ".repeat(20 - task.status.length),
       !task.duration
         ? "unknown"
         : `${task.duration.secs ? `${task.duration.secs}s` : ""} ${
             task.duration.nanos ? `${task.duration.nanos / 1000000}ms` : ""
           }`,
     ];
-    parts.map((part) => "".repeat(25 - part.length));
     logger.info(parts.join(" "));
   }
 }
