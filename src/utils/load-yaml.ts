@@ -17,7 +17,7 @@ export async function load<T extends object>(
 ): Promise<T> {
   const file = Bun.file(path);
 
-  if (!file.exists()) {
+  if (!(await file.exists())) {
     if (options?.allowMissing) {
       logger.debug(`file ${path} does not exist`);
       return options.placeholder;

@@ -39,6 +39,9 @@ ${chalk.bold("Moon option:")}
     --moon-version                  Print moon version
     --moon-help                     Print moon help
 
+${chalk.bold("Moonx option:")}
+    --log-report                    Print moon log report summary [env: MOONX_LOG_REPORT=] [default: false]
+
 For more info, run any command with the --help flag
     e.g. ${chalk.yellow("moonx <command> --help")}
 `);
@@ -77,6 +80,9 @@ Moon options:
     --logFile <LOG_FILE>            Path to a file to dump the moon logs [env: MOON_LOG_FILE=]
     -h, --help                      Print help
     -V, --version                   Print version
+
+Moonx options:
+    --log-report                    Print moon log report summary [env: MOONX_LOG_REPORT=] [default: false]
 
 For more info, run any command with the --help flag
 `);
