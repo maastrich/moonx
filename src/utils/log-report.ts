@@ -30,9 +30,9 @@ export async function logReport({ enabled }: { enabled: boolean }) {
       task.status + " ".repeat(maxStatusLength + 4 - task.status.length),
       !task.duration
         ? "unknown"
-        : `${task.duration.secs ? `${task.duration.secs}s` : ""} ${
+        : `${task.duration.secs ? `${task.duration.secs}s ` : ""}${
             task.duration.nanos ? `${task.duration.nanos / 1000000}ms` : ""
-          }`,
+          }`.trim(),
     ];
     logger.info(parts.join(" "));
   }
