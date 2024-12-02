@@ -19,10 +19,13 @@ export async function logReport({ enabled }: { enabled: boolean }) {
     })
     .filter((task) => task !== null);
 
+  const maxTargetLength = Math.max(...tasks.map((task) => task.target.length));
+  const maxStatusLength = Math.max(...tasks.map((task) => task.status.length));
+
   for (const task of tasks) {
     const parts = [
-      task.target + " ".repeat(30 - task.target.length),
-      task.status + " ".repeat(20 - task.status.length),
+      task.target + " ".repeat(maxTargetLength + 4 - task.target.length),
+      task.status + " ".repeat(maxStatusLength + 4 - task.status.length),
       !task.duration
         ? "unknown"
         : `${task.duration.secs ? `${task.duration.secs}s` : ""} ${
