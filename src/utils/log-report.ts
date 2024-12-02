@@ -19,17 +19,21 @@ export async function logReport({ enabled }: { enabled: boolean }) {
     })
     .filter((task) => task !== null);
 
+  const maxTargetLength = Math.max(...tasks.map((task) => task.target.length));
+  const maxStatusLength = Math.max(...tasks.map((task) => task.status.length));
+
   for (const task of tasks) {
+    logger.debug(`maxTargetLength: ${maxTargetLength}`);
+    logger.debug(`maxStatusLength: ${maxStatusLength}`);
     const parts = [
-      task.target,
-      task.status,
+      task.target + " ".repeat(maxTargetLength + 4 - task.target.length),
+      task.status + " ".repeat(maxStatusLength + 4 - task.status.length),
       !task.duration
         ? "unknown"
-        : `${task.duration.secs ? `${task.duration.secs}s` : ""} ${
+        : `${task.duration.secs ? `${task.duration.secs}s ` : ""}${
             task.duration.nanos ? `${task.duration.nanos / 1000000}ms` : ""
-          }`,
+          }`.trim(),
     ];
-    parts.map((part) => "".repeat(25 - part.length));
     logger.info(parts.join(" "));
   }
 }
