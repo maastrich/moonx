@@ -25,6 +25,10 @@ cli.option("logReport", "", {
   default: process.env.CI === "true" || process.env.MOONX_LOG_REPORT,
 });
 
+cli.option("debug", "Enable debug mode", {
+  default: process.env.MOONX_DEBUG === "true",
+});
+
 cli
   .command("_moonx_list [...params]", "List all available tasks")
   .action((arg) => {
@@ -110,7 +114,9 @@ cli.on("command:*", () => {
 cli.version(pkg.version);
 
 try {
-  cli.parse(Bun.argv, { run: false });
+  const res = cli.parse(Bun.argv, { run: false });
+  logger.debugEnabled = res.options.debug;
+
   await cli.runMatchedCommand();
 } catch (error) {
   if (error instanceof Error) {

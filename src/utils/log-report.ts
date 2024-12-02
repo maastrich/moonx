@@ -23,6 +23,8 @@ export async function logReport({ enabled }: { enabled: boolean }) {
   const maxStatusLength = Math.max(...tasks.map((task) => task.status.length));
 
   for (const task of tasks) {
+    logger.debug(`maxTargetLength: ${maxTargetLength}`);
+    logger.debug(`maxStatusLength: ${maxStatusLength}`);
     const parts = [
       task.target + " ".repeat(maxTargetLength + 4 - task.target.length),
       task.status + " ".repeat(maxStatusLength + 4 - task.status.length),

@@ -13,7 +13,7 @@ class Logger {
     console[type](emojify(`${prefix} ${message}`));
   }
 
-  public debugEnabled: boolean = false;
+  public debugEnabled = false;
 
   public warn(message: string) {
     this.dump("warn", message, ":rotating_light:");
