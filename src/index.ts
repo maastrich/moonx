@@ -4,6 +4,7 @@ import pkg from "../package.json";
 
 import { list } from "./cli/list.js";
 import { help } from "./utils/help.js";
+import { logReport } from "./utils/log-report.js";
 import { logger } from "./utils/logger.js";
 import { scan } from "./utils/scan-moon.js";
 import { moon } from "./utils/utils.js";
@@ -20,6 +21,9 @@ cli.option("log", "");
 cli.option("logFile", "");
 cli.option("moon-help", "");
 cli.option("moon-version", "");
+cli.option("logReport", "", {
+  default: process.env.CI === "true" || process.env.MOONX_LOG_REPORT,
+});
 
 cli
   .command("_moonx_list [...params]", "List all available tasks")
@@ -38,7 +42,7 @@ for (const [name, workspaces] of commands) {
     .action(async (wss: Array<string>, options) => {
       const rest = ["--", ...options["--"]];
       if (wss.length === 0) {
-        return moon([`:${name}`, rest].flat(), {
+        const result = moon([`:${name}`, rest].flat(), {
           stdout: "inherit",
           stderr: "inherit",
           stdin: "inherit",
@@ -49,6 +53,8 @@ for (const [name, workspaces] of commands) {
             }
           },
         });
+        await logReport({ enabled: options.logReport });
+        process.exit(result.exitCode);
       }
       const filterd = wss.filter((ws) => {
         if (!workspaces.includes(ws)) {
@@ -62,7 +68,7 @@ for (const [name, workspaces] of commands) {
         return;
       }
 
-      return moon([filterd.map((ws) => `${ws}:${name}`), rest].flat(), {
+      const result = moon([filterd.map((ws) => `${ws}:${name}`), rest].flat(), {
         stdout: "inherit",
         stderr: "inherit",
         stdin: "inherit",
@@ -73,6 +79,8 @@ for (const [name, workspaces] of commands) {
           }
         },
       });
+      await logReport({ enabled: options.logReport });
+      process.exit(result.exitCode);
     });
 }
 
