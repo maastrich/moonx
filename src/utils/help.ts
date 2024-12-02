@@ -41,6 +41,7 @@ ${chalk.bold("Moon option:")}
 
 ${chalk.bold("Moonx option:")}
     --log-report                    Print moon log report summary [env: MOONX_LOG_REPORT=] [default: false]
+    --debug                         Enable debug mode [env: MOONX_DEBUG=] [default: false]
 
 For more info, run any command with the --help flag
     e.g. ${chalk.yellow("moonx <command> --help")}
@@ -83,6 +84,7 @@ Moon options:
 
 Moonx options:
     --log-report                    Print moon log report summary [env: MOONX_LOG_REPORT=] [default: false]
+    --debug                         Enable debug mode [env: MOONX_DEBUG=] [default: false]
 
 For more info, run any command with the --help flag
 `);
