@@ -1,6 +1,6 @@
 {
   "name": "@maastrich/moonx",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "A CLI tool to help you with moon syntax",
   "keywords": [
     "moon",
