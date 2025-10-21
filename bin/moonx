@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+
+echo "Binary not installed, you may need to run approve-build"

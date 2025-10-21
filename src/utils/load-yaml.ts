@@ -13,7 +13,7 @@ type LoadOptions<T> =
 
 export async function load<T extends object>(
   path: string,
-  options?: LoadOptions<T>,
+  options?: LoadOptions<T>
 ): Promise<T> {
   const file = Bun.file(path);
 

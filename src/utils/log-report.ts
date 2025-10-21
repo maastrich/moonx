@@ -3,6 +3,9 @@ import type { RunReport } from "@moonrepo/types";
 import { logger } from "./logger.js";
 
 export async function logReport({ enabled }: { enabled: boolean }) {
+  if (!enabled) {
+    return;
+  }
   const report: RunReport = await Bun.file(".moon/cache/runReport.json").json();
   const tasks = report.actions
     .map((action) => {
@@ -28,12 +31,20 @@ export async function logReport({ enabled }: { enabled: boolean }) {
     const parts = [
       task.target + " ".repeat(maxTargetLength + 4 - task.target.length),
       task.status + " ".repeat(maxStatusLength + 4 - task.status.length),
-      !task.duration
-        ? "unknown"
-        : `${task.duration.secs ? `${task.duration.secs}s ` : ""}${
-            task.duration.nanos ? `${task.duration.nanos / 1000000}ms` : ""
-          }`.trim(),
+      !task.duration ? "unknown" : formatDuration(task.duration),
     ];
-    logger.info(parts.join(" "));
+    logger.info(" " + parts.join(" "));
   }
+}
+
+function formatDuration(options: { secs: number; nanos: number }) {
+  const totalMs = options.secs * 1e3 + options.nanos / 1e6;
+
+  if (totalMs < 1000) return `${totalMs.toFixed(2)} ms`;
+  if (totalMs < 60_000) return `${(totalMs / 1000).toFixed(2)} s`;
+
+  const totalSec = totalMs / 1000;
+  const minutes = Math.floor(totalSec / 60);
+  const secondsRemainder = (totalSec % 60).toFixed(2);
+  return `${minutes}m ${secondsRemainder}s`;
 }

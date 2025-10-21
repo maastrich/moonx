@@ -1,7 +1,9 @@
 import { cac } from "cac";
 
-import pkg from "../package.json";
+import pkg from "../package.json" with { type: "json" };
 
+import { clearCache, getCacheInfo } from "./utils/cache.js";
+import { generateCompletion, type Shell } from "./cli/completion.js";
 import { list } from "./cli/list.js";
 import { help } from "./utils/help.js";
 import { logReport } from "./utils/log-report.js";
@@ -9,9 +11,13 @@ import { logger } from "./utils/logger.js";
 import { scan } from "./utils/scan-moon.js";
 import { moon } from "./utils/utils.js";
 
-const commands = await scan();
-
 const cli = cac("moonx");
+
+// Check if this is a completion or cache command - skip scanning if so
+const skipScanCommands = ["completion", "cache:clear", "cache:info"];
+const shouldSkipScan = Bun.argv.some((arg) => skipScanCommands.includes(arg));
+
+const commands = shouldSkipScan ? new Map<string, string[]>() : await scan();
 
 cli.option("cache", "");
 cli.option("color", "");
@@ -37,6 +43,40 @@ cli
     stdout.write(result.join("\n"));
     stdout.end();
   });
+
+cli
+  .command("completion <shell>", "Generate shell completion script")
+  .action((shell: string) => {
+    const validShells = ["bash", "zsh", "fish"];
+    if (!validShells.includes(shell)) {
+      logger.error(
+        `Invalid shell: ${shell}. Must be one of: ${validShells.join(", ")}`
+      );
+      process.exit(1);
+    }
+    const completionScript = generateCompletion(shell as Shell);
+    const stdout = Bun.stdout.writer();
+    stdout.write(completionScript);
+    stdout.end();
+  });
+
+cli.command("cache:clear", "Clear the completion cache").action(() => {
+  clearCache();
+  logger.info("Cache cleared successfully");
+});
+
+cli.command("cache:info", "Show cache information").action(async () => {
+  const info = await getCacheInfo();
+  if (!info.exists) {
+    logger.info("No cache found");
+    logger.info(`Cache path: ${info.path}`);
+  } else {
+    const ageInSeconds = Math.floor((info.age ?? 0) / 1000);
+    const ageInMinutes = Math.floor(ageInSeconds / 60);
+    logger.info(`Cache age: ${ageInMinutes}m ${ageInSeconds % 60}s`);
+    logger.info(`Cache path: ${info.path}`);
+  }
+});
 
 for (const [name, workspaces] of commands) {
   cli
