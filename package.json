@@ -17,14 +17,14 @@
   },
   "files": [
     "bin/moonx",
-    "scripts/setup-binary.js"
+    "scripts/setup-binary.sh"
   ],
   "scripts": {
     "build": "bun build --compile src/index.ts --outfile=\"bin/moonx-dev\"",
     "changeset": "changeset",
     "format": "prettier --check . --config ./configs/.prettierrc.json",
     "format:fix": "prettier --write . --config ./configs/.prettierrc.json",
-    "postinstall": "node scripts/setup-binary.js",
+    "postinstall": "scripts/setup-binary.sh",
     "lint": "pnpm run lint:knip && pnpm run lint:oxlint",
     "lint:fix": "pnpm run lint:knip:fix && pnpm run lint:oxlint:fix",
     "lint:knip": "knip --config ./configs/knip.json",
