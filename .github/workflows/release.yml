@@ -57,11 +57,6 @@ jobs:
         with:
           run_install: false
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:

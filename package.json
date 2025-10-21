@@ -11,7 +11,6 @@
   "license": "MIT",
   "author": "Maastrich @maastrich",
   "type": "module",
-  "main": "src/index.ts",
   "bin": {
     "moonx": "bin/moonx",
     "mx": "bin/moonx"
@@ -31,7 +30,6 @@
     "lint:knip:fix": "knip --config ./configs/knip.json --fix",
     "lint:oxlint": "oxlint src scripts --config ./configs/oxlint.json",
     "lint:oxlint:fix": "oxlint src scripts --config ./configs/oxlint.json --fix",
-    "prepack": "pnpm run build",
     "release": "pnpm run build && changeset publish",
     "sort": "pnpm sort-package-json",
     "type-check": "tsc --noEmit",
