@@ -3,8 +3,8 @@ import { renderString } from "nunjucks";
 
 function style(text: string) {
   return text
-    .replace(/([\[\<][A-Z_]+[\]\>])/g, chalk.gray("$1"))
-    .replace(/(?:(\-[a-zA-Z]), )?(\-\-[a-zA-Z\-]+)/g, (_, short, long) => {
+    .replace(/([[<][A-Z_]+[\]>])/g, chalk.gray("$1"))
+    .replace(/(?:(-[a-zA-Z]), )?(--[a-zA-Z-]+)/g, (_, short, long) => {
       if (!short) {
         return chalk.blue(long);
       }
@@ -16,11 +16,11 @@ const _moonx = style(`
 ${chalk.bold.blue("moonx")}
 
 ${chalk.bold.magenta("Usage:")} ${chalk.yellow(
-  "moonx",
+  "moonx"
 )} <command> [...workspaces] [MOON_OPTIONS] -- [COMMAND_OPTIONS]
 
 ${chalk.bold(
-  "Info:",
+  "Info:"
 )} When no workspaces are specified, moonx will run the command on all available workspaces.
 
 ${chalk.bold("Commands:")}
@@ -48,11 +48,32 @@ For more info, run any command with the --help flag
 `);
 
 function moonx(tasks: Array<[string, string[]]>) {
+  const max = Math.max(...tasks.map(([task]) => task.length), 29);
+
+  const renderCommand = (commands: string[], max: number) => {
+    // join commands until length exceeds 50
+    // if length exceeds 50, add "+N" at the end
+    const { extras, content } = commands.reduce(
+      (acc, current) => {
+        if (acc.content.length + current.length + 1 <= max) {
+          acc.content += (acc.content ? " " : "") + current;
+        } else {
+          acc.extras += 1;
+        }
+        return acc;
+      },
+      { extras: 0, content: "" }
+    );
+    return content + (extras > 0 ? ` ${chalk.magenta(`+${extras}`)}` : "");
+  };
+
+  console.log(process.env.COLUMNS);
+
   return renderString(_moonx, {
     tasks: tasks.map(([task, commands]) => ({
       name: task,
-      spacing: " ".repeat(30 - task.length),
-      commands: commands.join(" "),
+      spacing: " ".repeat(max - task.length + 1),
+      commands: renderCommand(commands, process.stdout.columns - max - 10),
     })),
   });
 }
@@ -61,11 +82,11 @@ const _task = style(`
 ${chalk.bold.blue("moonx")}
 
 ${chalk.bold.magenta("Usage:")} ${chalk.yellow(
-  "moonx",
+  "moonx"
 )} {command} [...workspaces] [MOON_OPTIONS] -- [COMMAND_OPTIONS]
 
 ${chalk.bold(
-  "Info:",
+  "Info:"
 )} When no workspaces are specified, moonx will run the command on all available workspaces.
 
 ${chalk.bold("Available workspaces:")}

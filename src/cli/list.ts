@@ -1,6 +1,6 @@
 export function list(
   [command, ...wss]: Array<string>,
-  commands: Map<string, string[]>,
+  commands: Map<string, string[]>
 ) {
   if (!commands.has(command) && wss.length) {
     console.log(`task ${command} does not exist`);

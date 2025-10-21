@@ -1,5 +1,6 @@
 import type { Task } from "@moonrepo/types";
 
+import { readCache, writeCache } from "./cache.js";
 import { load } from "./load-yaml.js";
 import { moon } from "./utils.js";
 
@@ -8,7 +9,15 @@ type QueryResult = {
   options: object;
 };
 
-export async function scan() {
+export async function scan(options?: { skipCache?: boolean }) {
+  // Try to read from cache first unless skipCache is true
+  if (!options?.skipCache) {
+    const cached = await readCache();
+    if (cached) {
+      return cached;
+    }
+  }
+
   const moonxfig = await load<{
     "ignore-tasks": string[];
   }>("moonx.yml", {
@@ -26,7 +35,7 @@ export async function scan() {
 
   const { tasks }: QueryResult = JSON.parse(res.stdout.toString());
   const projects = Object.entries(tasks).map(
-    ([name, tasks]) => [name, Object.keys(tasks)] as const,
+    ([name, tasks]) => [name, Object.keys(tasks)] as const
   );
 
   // Map<task, Array<project>>
@@ -42,6 +51,9 @@ export async function scan() {
       commands.set(task, command);
     }
   }
+
+  // Write to cache
+  writeCache(commands);
 
   return commands;
 }

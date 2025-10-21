@@ -4,7 +4,7 @@ class Logger {
   public dump(
     type: "log" | "info" | "warn" | "error",
     message: string,
-    prefix?: string,
+    prefix?: string
   ) {
     if (!prefix) {
       console[type](emojify(message));

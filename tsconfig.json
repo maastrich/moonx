@@ -1,12 +1,15 @@
 {
   "compilerOptions": {
-    "strict": true,
     "target": "ESNext",
     "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
     "skipLibCheck": true,
-    "types": ["bun-types", "@withfig/autocomplete-types"],
     "resolveJsonModule": true,
-    "moduleResolution": "NodeNext"
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["bun-types"]
   },
-  "include": ["src/**/*", "scripts/**/*"]
+  "include": ["src/**/*", "scripts/**/*"],
+  "exclude": ["node_modules", "bin", "dist"]
 }

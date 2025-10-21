@@ -2,7 +2,7 @@ import type { SpawnOptions } from "bun";
 
 import { logger } from "./logger.js";
 
-export function getPackageManager() {
+function getPackageManager() {
   const userAgent = process.env.npm_config_user_agent ?? "empty";
   return (
     ["pnpm", "yarn", "bun", "npm"].find((pm) => userAgent.includes(pm)) ?? null
@@ -11,7 +11,7 @@ export function getPackageManager() {
 
 let installedGlobally: boolean | null = null;
 
-export function isMoonInstalledGlobally() {
+function isMoonInstalledGlobally() {
   if (installedGlobally !== null) {
     return installedGlobally;
   }
@@ -40,7 +40,7 @@ function getBaseCommand() {
         return ["moon"];
       }
       logger.error(
-        "Could not find a package manager to run moon and moon is not installed globally",
+        "Could not find a package manager to run moon and moon is not installed globally"
       );
       process.exit(1);
     }
@@ -49,7 +49,7 @@ function getBaseCommand() {
 
 export function moon(
   args: string[],
-  options: Omit<SpawnOptions.OptionsObject, "cmd"> = {},
+  options: Omit<SpawnOptions.OptionsObject, "cmd"> = {}
 ) {
   const baseCommand = getBaseCommand();
   return Bun.spawnSync({
