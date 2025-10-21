@@ -16,10 +16,11 @@
     "mx": "bin/moonx"
   },
   "files": [
+    "bin/moonx",
     "scripts/setup-binary.js"
   ],
   "scripts": {
-    "build": "bun build --compile src/index.ts --outfile=\"bin/moonx\"",
+    "build": "bun build --compile src/index.ts --outfile=\"bin/moonx-dev\"",
     "changeset": "changeset",
     "format": "prettier --check . --config ./configs/.prettierrc.json",
     "format:fix": "prettier --write . --config ./configs/.prettierrc.json",
