@@ -40,7 +40,7 @@ function getBaseCommand() {
         return ["moon"];
       }
       logger.error(
-        "Could not find a package manager to run moon and moon is not installed globally",
+        "Could not find a package manager to run moon and moon is not installed globally"
       );
       process.exit(1);
     }
@@ -53,7 +53,7 @@ export function moon<
   const Err extends SpawnOptions.Readable = "pipe",
 >(
   args: string[],
-  options: Omit<SpawnOptions.OptionsObject<In, Out, Err>, "cmd"> = {},
+  options: Omit<SpawnOptions.OptionsObject<In, Out, Err>, "cmd"> = {}
 ) {
   const baseCommand = getBaseCommand();
   return Bun.spawnSync<In, Out, Err>([...baseCommand, ...args], {
