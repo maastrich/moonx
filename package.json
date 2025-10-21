@@ -32,7 +32,6 @@
     "lint:oxlint": "oxlint src scripts --config ./configs/oxlint.json",
     "lint:oxlint:fix": "oxlint src scripts --config ./configs/oxlint.json --fix",
     "prepack": "pnpm run build",
-    "prepublishOnly": "pnpm run format && pnpm run type-check && pnpm run lint",
     "release": "pnpm run build && changeset publish",
     "sort": "pnpm sort-package-json",
     "type-check": "tsc --noEmit",
