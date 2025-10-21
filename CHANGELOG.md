@@ -1,5 +1,12 @@
 # @maastrich/moonx
 
+## 0.2.1
+
+### Patch Changes
+
+- bf17dee: Make setup script a shell script
+- bf17dee: Update setup script
+
 ## 0.2.0
 
 ### Minor Changes
