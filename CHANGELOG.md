@@ -1,5 +1,11 @@
 # @maastrich/moonx
 
+## 0.2.2
+
+### Patch Changes
+
+- fix setup
+
 ## 0.2.1
 
 ### Patch Changes
