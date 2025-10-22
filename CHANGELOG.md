@@ -1,5 +1,11 @@
 # @maastrich/moonx
 
+## 0.2.3
+
+### Patch Changes
+
+- fix postinstall
+
 ## 0.2.2
 
 ### Patch Changes
