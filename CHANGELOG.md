@@ -1,5 +1,12 @@
 # @maastrich/moonx
 
+## 0.2.4
+
+### Patch Changes
+
+- 5443346: add proto support
+- 5443346: add checksum
+
 ## 0.2.3
 
 ### Patch Changes
