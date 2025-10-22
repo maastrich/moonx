@@ -4,31 +4,24 @@
 name = "moonx"
 type = "cli"
 
-[platform.linux-x64]
-bin-path = "moonx"
-download-file = "linux-x64"
-checksum-file = "checksum-linux-x64.txt"
+[platform.linux]
+download-file = "linux-{arch}"
+checksum-file = "checksum-linux-{arch}.txt"
 
-[platform.linux-arm64]
-bin-path = "moonx"
-download-file = "linux-arm64"
-checksum-file = "checksum-linux-arm64.txt"
-
-[platform.macos-x64]
-bin-path = "moonx"
-download-file = "darwin-x64"
-checksum-file = "checksum-darwin-x64.txt"
-
-[platform.macos-arm64]
-bin-path = "moonx"
-download-file = "darwin-arm64"
-checksum-file = "checksum-darwin-arm64.txt"
+[platform.macos]
+download-file = "darwin-{arch}"
+checksum-file = "checksum-darwin-{arch}.txt"
 
 [install]
-download-url = "https://github.com/maastrich/moonx/releases/download/v{version}/{download_file}"
-checksum-url = "https://github.com/maastrich/moonx/releases/download/v{version}/{checksum_file}"
 # No unpacking needed since binaries are distributed directly
 unpack = false
+
+[install.arch]
+aarch64 = "arm64"
+x86_64 = "x64"
+
+[install.exes]
+moonx = { primary = true }
 
 [resolve]
 git-url = "https://github.com/maastrich/moonx"
