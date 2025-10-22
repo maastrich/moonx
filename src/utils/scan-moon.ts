@@ -33,9 +33,13 @@ export async function scan(options?: { skipCache?: boolean }) {
     stdin: "inherit",
   });
 
+  if (!res.success) {
+    process.exit(res.exitCode);
+  }
+
   const { tasks }: QueryResult = JSON.parse(res.stdout.toString());
   const projects = Object.entries(tasks).map(
-    ([name, tasks]) => [name, Object.keys(tasks)] as const
+    ([name, tasks]) => [name, Object.keys(tasks)] as const,
   );
 
   // Map<task, Array<project>>
