@@ -24,7 +24,7 @@
     "changeset": "changeset",
     "format": "prettier --check . --config ./configs/.prettierrc.json",
     "format:fix": "prettier --write . --config ./configs/.prettierrc.json",
-    "postinstall": "./scripts/setup-binary.sh",
+    "postinstall": "bash ./scripts/setup-binary.sh",
     "lint": "pnpm run lint:knip && pnpm run lint:oxlint",
     "lint:fix": "pnpm run lint:knip:fix && pnpm run lint:oxlint:fix",
     "lint:knip": "knip --config ./configs/knip.json",
